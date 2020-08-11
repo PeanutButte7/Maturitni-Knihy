@@ -1,21 +1,46 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home.vue'
+import SignUp from "../views/SignUp";
+import Login from "../views/Login";
+import Home from "../views/Home";
+import Admin from "../views/Admin/Admin";
+import AdminAddBook from "../views/Admin/AdminAddBook";
 
-Vue.use(VueRouter)
 
-  const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-]
+Vue.use(VueRouter);
+
+const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: Home
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/signUp',
+      name: 'signUp',
+      component: SignUp
+    },
+    {
+        path: '/admin',
+        name: 'admin',
+        component: Admin
+    },
+    {
+        path: '/adminAddBook',
+        name: 'adminAddBook',
+        component: AdminAddBook
+    },
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
 
 export default router
