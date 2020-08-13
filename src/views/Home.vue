@@ -4,8 +4,8 @@
         <h2 class="text-center text-3xl text-primary">Kompletní databáze rozborů a audioknih k maturitě</h2>
         <div id="searchSection" class="mt-16">
             <div id="filters" class="mb-2">
-                <Checkbox v-model="searchForAuthor" class="inline-block">Vyhledat dle autora</Checkbox>
-                <Checkbox  v-model="onlyAudioBooks" class="inline-block ml-10">Pouze tituly s audioknihou</Checkbox>
+                <Checkbox v-model="searchForAuthor" checkboxId="authorCheckbox" class="inline-block">Vyhledat dle autora</Checkbox>
+                <Checkbox  v-model="onlyAudioBooks" checkbox-id="audioBookCheckbox" class="inline-block ml-10">Pouze tituly s audioknihou</Checkbox>
             </div>
             <input @input="search" v-model="searchText" :placeholder="placeholder" type="text" class="text-2xl focus:outline-none bg-background text-primary border-2 border-brand rounded-lg px-3 py-1 w-full">
         </div>
