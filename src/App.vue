@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Navbar/>
+        <Navbar class="mt-5 mx-8"/>
         <router-view class="container mx-auto mt-10"/>
     </div>
 </template>

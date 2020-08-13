@@ -1,5 +1,8 @@
 <template>
-    <router-link to="adminAddBook" class="ml-5">Přidat knihu</router-link>
+    <div>
+        <router-link :to="{ name: 'adminAddBook' }" class="ml-5 text-primary">Přidat knihu</router-link>
+        <router-view/>
+    </div>
 </template>
 
 <script>

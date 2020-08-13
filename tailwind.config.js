@@ -20,11 +20,14 @@ module.exports = {
       colors: {
         primary: 'var(--color-primary)',
         accent: 'var(--color-accent)',
+        highlight: 'var(--color-highlight)',
         brand: 'var(--color-brand)',
         background: 'var(--color-background)'
       },
     },
   },
-  variants: {},
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'checked'],
+  },
   plugins: [],
 };

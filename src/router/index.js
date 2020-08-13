@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from "../store/index"
+
 import SignUp from "../views/SignUp";
 import Login from "../views/Login";
 import Home from "../views/Home";
@@ -28,13 +30,19 @@ const routes = [
     {
         path: '/admin',
         name: 'admin',
-        component: Admin
-    },
-    {
-        path: '/adminAddBook',
-        name: 'adminAddBook',
-        component: AdminAddBook
-    },
+        component: Admin,
+        beforeEnter: (to, from, next) => {
+            if (store.getters.user.loggedIn) next();
+            else next({ name: 'home' })
+        },
+        children: [
+            {
+                path: 'addBook',
+                name: "adminAddBook",
+                component: AdminAddBook
+            }
+        ]
+    }
 ];
 
 const router = new VueRouter({
