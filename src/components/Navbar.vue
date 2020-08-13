@@ -9,13 +9,15 @@
             </div>
             <div>
                 <span v-if="!user.loggedIn">
-                <router-link to="signUp">Vytvořit účet</router-link>
-                <router-link to="login" class="ml-5">Přihlásit se</router-link>
-            </span>
-                <router-link to="admin" class="ml-5">Admin</router-link>
-                <span v-if="user.loggedIn" class="ml-5">Přihlášen jako: {{ user.data.displayName }}</span>
-                <!--        MOVE SIGNOUT TO PROFILE PAGE LATER-->
-                <button v-if="user.loggedIn" @click="signOut" class="ml-5 text-bold">Odhlásit</button>
+                    <router-link to="signUp">Vytvořit účet</router-link>
+                    <router-link to="login" class="ml-5">Přihlásit se</router-link>
+                </span>
+                <span v-if="user.loggedIn">
+                    <router-link v-if="user.data.role === 'Admin'" to="admin" class="ml-5">Admin</router-link>
+                    <span class="ml-5">Přihlášen jako: {{ user.data.displayName }}</span>
+                        <!--        MOVE SIGNOUT TO PROFILE PAGE LATER-->
+                    <button @click="signOut" class="ml-5 text-bold">Odhlásit</button>
+                </span>
             </div>
         </div>
     </nav>

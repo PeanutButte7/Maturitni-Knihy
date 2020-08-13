@@ -1,7 +1,7 @@
 <template>
     <div id="Home">
         <h1 class="text-center text-6xl font-medium text-brand">Maturitní knihy</h1>
-        <h2 class="text-center text-3xl text-primary">Největší databáze rozborů a audioknih k maturitě</h2>
+        <h2 class="text-center text-3xl text-primary">Kompletní databáze rozborů a audioknih k maturitě</h2>
         <div id="searchSection" class="mt-16">
             <div id="filters" class="mb-2">
                 <Checkbox v-model="searchForAuthor" class="inline-block">Vyhledat dle autora</Checkbox>

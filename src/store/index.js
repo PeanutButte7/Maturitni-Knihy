@@ -39,11 +39,14 @@ export default new Vuex.Store({
             if (user) {
                 commit("SET_USER", {
                     uid: user.uid,
-                    displayName: user.displayName
+                    displayName: user.displayName,
+                    role: user.role !== null ? user.role : "",
+                    contributions: user.contributions,
+                    badges: user.badges
                 });
             } else {
                 commit("SET_USER", null);
             }
-        },
+        }
     }
 });

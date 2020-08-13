@@ -15,24 +15,27 @@ import {db} from "../db";
 Vue.config.productionTip = false;
 Vue.use(firestorePlugin);
 
+// Sets up local user profile data
 firebase.auth().onAuthStateChanged(user => {
-  db.collection("users").doc(user.uid).get().then((doc) => {
-    if (doc.exists) {
-      console.log("Document data:", doc.data());
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-
-    console.log("lol");
-    store.dispatch("fetchUser", user)
-  }).catch(function(error) {
+    db.collection("users").doc(user.uid).get().then((doc) => {
+        if (doc.exists) {
+            store.dispatch("fetchUser", {
+                uid: user.uid,
+                displayName: user.displayName,
+                role: doc.data().role,
+                contributions: doc.data().contributions,
+                badges: doc.data().badges
+            })
+        } else {
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
     console.log("Error getting documents: ", error);
-  });
+    });
 });
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app');

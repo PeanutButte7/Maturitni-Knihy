@@ -32,7 +32,7 @@ const routes = [
         name: 'admin',
         component: Admin,
         beforeEnter: (to, from, next) => {
-            if (store.getters.user.loggedIn) next();
+            if (store.getters.user.data.role === "Admin") next();
             else next({ name: 'home' })
         },
         children: [
