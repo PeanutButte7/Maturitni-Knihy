@@ -7,7 +7,7 @@
                 <Checkbox v-model="searchForAuthor" checkboxId="authorCheckbox" class="inline-block">Vyhledat dle autora</Checkbox>
                 <Checkbox  v-model="onlyAudioBooks" checkbox-id="audioBookCheckbox" class="inline-block ml-10">Pouze tituly s audioknihou</Checkbox>
             </div>
-            <input @input="search" v-model="searchText" :placeholder="placeholder" type="text" class="text-2xl focus:outline-none bg-background text-primary border-2 border-brand rounded-lg px-3 py-1 w-full">
+            <input @input="search" v-model="searchedText" :placeholder="placeholder" type="text" class="text-2xl focus:outline-none bg-background text-primary border-2 border-brand rounded-lg px-3 py-1 w-full">
         </div>
 
         <div id="table" class="table border-collapse table-auto w-full mt-10">
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="table-row-group">
-                <div v-for="(book, index) in books" :key="index" class="hover:bg-highlight table-row font-light text-xl text-primary border-b border-accent">
+                <div v-for="(book, index) in shownBooks" :key="index" class="hover:bg-highlight table-row font-light text-xl text-primary border-b border-accent">
                     <div class="table-cell font-normal pb-1 pt-5">{{ book.name }}</div>
                     <div class="table-cell">{{ book.author }}</div>
                     <div class="table-cell">
@@ -61,14 +61,21 @@
         data() {
             return {
                 books: [],
-                searchText: "",
+                shownBooks: [],
+                searchedText: "",
                 searchForAuthor: false,
                 onlyAudioBooks: false
             }
         },
+        created() {
+            this.shownBooks = this.books;
+        },
         computed: {
             placeholder() {
                 return this.searchForAuthor ? "Vyhledej autora" : "Vyhledej knihu"
+            },
+            trimmedSearchText() {
+                return this.searchedText.toLowerCase().trim();
             }
         },
         watch: {
@@ -79,27 +86,26 @@
         methods: {
             search() {
                 const field = this.searchForAuthor ? "author" : "name";
-                const searchedBooks = [];
+                let searchedBooks = [];
                 let filteredBooks = [];
 
-                db.collection("books").where(field, '>=', this.searchText).where(field, '<=', this.searchText + '\uf8ff')
-                    .get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            searchedBooks.push(doc.data())
-                        });
-
-                        if (this.onlyAudioBooks) {
-                            filteredBooks = searchedBooks.filter(book => book.audioBookLinks.length)
-                        } else {
-                            filteredBooks = searchedBooks;
+                if (this.trimmedSearchText !== "") {
+                    this.books.forEach(book => {
+                        if (book[field].toLowerCase().startsWith(this.trimmedSearchText)) {
+                            searchedBooks.push(book)
                         }
-
-                        this.books = filteredBooks;
-                    })
-                    .catch(function(error) {
-                        console.log("Error getting documents: ", error);
                     });
+                } else {
+                    searchedBooks = this.books;
+                }
+
+                if (this.onlyAudioBooks) {
+                    filteredBooks = searchedBooks.filter(book => book.audioBookLinks.length)
+                } else {
+                    filteredBooks = searchedBooks;
+                }
+
+                this.shownBooks = filteredBooks;
             }
         },
         firestore: {
