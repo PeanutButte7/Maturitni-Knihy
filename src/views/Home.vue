@@ -1,7 +1,7 @@
 <template>
     <div id="Home">
         <h1 class="text-center text-6xl font-medium text-brand">Maturitní knihy</h1>
-        <h2 class="text-center text-3xl text-primary">Kompletní databáze rozborů a audioknih k maturitě</h2>
+        <h2 class="text-center text-3xl text-primary">Kompletní databáze rozborů a audio knih k maturitě</h2>
         <div id="searchSection" class="mt-16">
             <div id="filters" class="mb-2">
                 <Checkbox v-model="searchForAuthor" checkboxId="authorCheckbox" class="inline-block">Vyhledat dle autora</Checkbox>
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="table-row-group">
-                <div v-for="(book, index) in shownBooks" :key="index" class="hover:bg-highlight table-row font-light text-xl text-primary border-b border-accent">
+                <div @click="linkToBook(book)" v-for="(book, index) in shownBooks" :key="index" class="hover:bg-highlight table-row font-light text-xl text-primary border-b border-accent">
                     <div class="table-cell font-normal pb-1 pt-5">{{ book.name }}</div>
                     <div class="table-cell">{{ book.author }}</div>
                     <div class="table-cell">
@@ -74,8 +74,8 @@
             placeholder() {
                 return this.searchForAuthor ? "Vyhledej autora" : "Vyhledej knihu"
             },
-            trimmedSearchText() {
-                return this.searchedText.toLowerCase().trim();
+            cleanedSearchText() {
+                return this.searchedText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             }
         },
         watch: {
@@ -84,14 +84,19 @@
             }
         },
         methods: {
+            linkToBook(book) {
+                const strippedName = book.name.replace(/ /g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                this.$router.push({ name: "book", params: { id: book.id + "_" + strippedName }})
+            },
             search() {
                 const field = this.searchForAuthor ? "author" : "name";
                 let searchedBooks = [];
                 let filteredBooks = [];
 
-                if (this.trimmedSearchText !== "") {
+                if (this.cleanedSearchText !== "") {
                     this.books.forEach(book => {
-                        if (book[field].toLowerCase().startsWith(this.trimmedSearchText)) {
+                        if (book[field].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(this.cleanedSearchText)) {
                             searchedBooks.push(book)
                         }
                     });

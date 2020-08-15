@@ -7,6 +7,7 @@ import Login from "../views/Login";
 import Home from "../views/Home";
 import Admin from "../views/Admin/Admin";
 import AdminAddBook from "../views/Admin/AdminAddBook";
+import Book from "../views/Book";
 
 
 Vue.use(VueRouter);
@@ -26,6 +27,12 @@ const routes = [
       path: '/signUp',
       name: 'signUp',
       component: SignUp
+    },
+    {
+        path: '/book/:id',
+        name: 'book',
+        component: Book,
+        props: true
     },
     {
         path: '/admin',

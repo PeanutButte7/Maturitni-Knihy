@@ -121,21 +121,27 @@
                     pages: parseInt(this.form.pages, 10),
                     analysisLinks: this.form.analysisLinks,
                     audioBookLinks: this.form.audioBookLinks
-                }).then(() => {
-                    this.errorMessage = null;
-                    this.uploadSuccessful = true;
+                }).then(docRef => {
+                    db.collection("books").doc(docRef.id).update({
+                        id: docRef.id
+                    }).then(() => {
+                        this.errorMessage = null;
+                        this.uploadSuccessful = true;
+                    }).catch(err => {
+                        this.errorMessage = err.message
+                    })
                 }).catch(err => {
-                    console.log(err)
+                    this.errorMessage = err.message
                 });
             },
             addAnalysisLink() {
-                this.form.analysisLinks.push({url: "", status: "pending", createdBy: db.doc('users/' + this.user.data.uid)})
+                this.form.analysisLinks.push({url: "", status: "accepted", createdBy: db.doc('users/' + this.user.data.uid)})
             },
             deleteAnalysisLink(index) {
                 this.form.analysisLinks.splice(index, 1);
             },
             addAudioBookLink(){
-                this.form.audioBookLinks.push({url: "", type: "", status: "pending", createdBy: db.doc('users/' + this.user.data.uid)})
+                this.form.audioBookLinks.push({url: "", type: "", status: "accepted", createdBy: db.doc('users/' + this.user.data.uid)})
             },
             deleteAudioBookLink(index){
                 this.form.audioBookLinks.splice(index, 1);
