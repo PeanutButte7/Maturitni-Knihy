@@ -19,6 +19,7 @@ module.exports = {
       },
       colors: {
         primary: 'var(--color-primary)',
+        note: 'var(--color-note)',
         accent: 'var(--color-accent)',
         highlight: 'var(--color-highlight)',
         brand: 'var(--color-brand)',

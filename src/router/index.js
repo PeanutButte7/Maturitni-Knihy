@@ -8,6 +8,7 @@ import Home from "../views/Home";
 import Admin from "../views/Admin/Admin";
 import AdminAddBook from "../views/Admin/AdminAddBook";
 import Book from "../views/Book";
+import PendingList from "../views/Admin/PendingList";
 
 
 Vue.use(VueRouter);
@@ -29,7 +30,7 @@ const routes = [
       component: SignUp
     },
     {
-        path: '/book/:id',
+        path: '/kniha/:id',
         name: 'book',
         component: Book,
         props: true
@@ -39,14 +40,19 @@ const routes = [
         name: 'admin',
         component: Admin,
         beforeEnter: (to, from, next) => {
-            if (store.getters.user.data.role === "Admin") next();
-            else next({ name: 'home' })
+            if (store.getters.user.data === null || store.getters.user.data.role !== "Admin") next({ name: 'home' });
+            else next()
         },
         children: [
             {
                 path: 'addBook',
-                name: "adminAddBook",
+                name: 'adminAddBook',
                 component: AdminAddBook
+            },
+            {
+                path: 'pendingList',
+                name: 'pendingList',
+                component: PendingList
             }
         ]
     }

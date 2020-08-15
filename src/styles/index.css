@@ -11,6 +11,7 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --color-primary: #F7FAFC;
+        --color-note: #718096;
         --color-accent: #4A5568;
         --color-highlight: #101620;
         --color-brand: #4FD1C5;

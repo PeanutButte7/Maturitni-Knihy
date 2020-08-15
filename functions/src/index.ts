@@ -1,9 +1,21 @@
-//import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions';
+import * as admin from "firebase-admin";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// Initializes connection to firestore
+admin.initializeApp(functions.config().firebase);
+const db = admin.firestore();
+
+export const createUserInFirestore = functions.auth.user().onCreate((user) => {
+    return db.collection("users").doc(user.uid).set({
+            uid: user.uid,
+            displayName: user.displayName,
+            contributions: 0,
+            badges: null
+    })
+        .then(() => {
+            console.log("User account created!");
+        })
+        .catch(error => {
+            console.error("Error creating document: ", error);
+        });
+});

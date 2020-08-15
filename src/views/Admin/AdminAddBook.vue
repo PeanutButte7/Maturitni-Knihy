@@ -43,9 +43,7 @@
                 </div>
                 <button @click="addAudioBookLink" type="button" class="text-primary mt-2">+ Přidat odkaz</button>
             </div>
-            <div class="flex items-center justify-between">
-                <button @click="createBook" class="bg-brand text-gray-900 font-bold border-2 border-brand rounded-lg px-6 py-1" type="button">Vytvořit knihu</button>
-            </div>
+            <Btn @click.native="createBook">Vytvořit knihu</Btn>
         </form>
         <p v-if="this.errorMessage" class="text-red-500 mt-5">{{ this.errorMessage }}</p>
         <p v-if="uploadSuccessful" class="text-brand mt-5">Kniha byla nahrána do databáze</p>
@@ -55,6 +53,7 @@
 <script>
     import InputField from "../../components/Core/InputField";
     import InputLabel from "../../components/Core/InputLabel";
+    import Btn from "../../components/Core/Btn";
     import {db} from "../../../db";
     import {mapGetters} from "vuex";
 
@@ -62,7 +61,8 @@
         name: "AdminAddBook",
         components: {
             InputField,
-            InputLabel
+            InputLabel,
+            Btn
         },
         data() {
             return {

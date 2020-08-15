@@ -27,7 +27,6 @@
 
 <script>
     import firebase from "firebase/app";
-    import { db } from "../../db.js"
     import InputLabel from "../components/Core/InputLabel";
     import InputField from "../components/Core/InputField";
 
@@ -63,13 +62,6 @@
                     .then(data => {
                         data.user.updateProfile({
                             displayName: this.form.name,
-                        });
-
-                        db.collection("users").doc(firebase.auth().currentUser.uid).set({
-                            uid: firebase.auth().currentUser.uid,
-                            displayName: this.form.name,
-                            contributions: 0,
-                            badges: null
                         });
 
                         this.$router.replace({
