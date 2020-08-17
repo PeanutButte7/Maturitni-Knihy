@@ -1,11 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --color-primary: #2D3748;
-    --color-accent: #A0AEC0;
-    --color-highlight: #fff;
+    /*--color-primary: #2D3748;*/
+    /*--color-accent: #A0AEC0;*/
+    /*--color-note: #718096;*/
+    /*--color-highlight: #fff;*/
+    /*--color-brand: #4FD1C5;*/
+    /*--color-background: #EDF2F7;*/
+    --color-primary: #F7FAFC;
+    --color-note: #718096;
+    --color-accent: #4A5568;
+    --color-highlight: #101620;
     --color-brand: #4FD1C5;
-    --color-background: #EDF2F7;
+    --color-background: #1A202C;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -90,6 +90,22 @@
                     return;
                 }
 
+                // Checks if pages are inputed as a number
+                if (isNaN(this.form.pages)) {
+                    this.errorMessage = "Počet stran musí být zadán jako číslo";
+                    return;
+                }
+
+                if (this.form.name.slice(-1) === " " || this.form.name.charAt(0) === " ") {
+                    this.errorMessage = "Na začátku a konci jména nesmí být mezera";
+                    return;
+                }
+
+                if (this.form.author.slice(-1) === " " || this.form.author.charAt(0) === " ") {
+                    this.errorMessage = "Na začátku a konci autorova jména nesmí být mezera";
+                    return;
+                }
+
                 let hasError;
 
                 this.form.analysisLinks.forEach(link => {
@@ -105,11 +121,6 @@
                         hasError = true;
                     }
                 });
-
-                if (isNaN(this.form.pages)) {
-                    this.errorMessage = "Počet stran musí být zadán jako číslo";
-                    hasError = true;
-                }
 
                 if (hasError) {
                     return;

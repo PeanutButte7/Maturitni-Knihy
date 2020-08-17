@@ -9,8 +9,12 @@
             </div>
             <input @input="search" v-model="searchedText" :placeholder="placeholder" type="text" class="text-2xl focus:outline-none bg-background text-primary border-2 border-brand rounded-lg px-3 py-1 w-full">
         </div>
-
-        <div id="table" class="table border-collapse table-auto w-full mt-10">
+        <div v-if="books.length === 0" class="mt-8">
+            <div v-for="index in 20" :key="index" class="animate-pulse pt-8">
+                <div class="h-10 w-full bg-accent rounded animate-pulse"></div>
+            </div>
+        </div>
+        <div v-else id="table" class="table border-collapse table-auto w-full mt-10">
             <div class="table-header-group font-bold">
                 <div class="table-row text-xl text-primary text-left">
                     <div class="table-cell">Kniha</div>
@@ -33,7 +37,7 @@
                 </div>
             </div>
             <div class="table-row-group">
-                <div @click="linkToBook(book)" v-for="(book, index) in shownBooks" :key="index" class="hover:bg-highlight table-row font-light text-xl text-primary border-b border-accent">
+                <div @click="linkToBook(book)" v-for="(book, index) in shownBooks" :key="index" class="hover:bg-highlight table-row font-light text-xl text-primary border-b border-accent cursor-pointer">
                     <div class="table-cell font-normal pb-1 pt-5">{{ book.name }}</div>
                     <div class="table-cell">{{ book.author }}</div>
                     <div class="table-cell">
