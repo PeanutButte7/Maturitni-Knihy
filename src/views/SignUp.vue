@@ -49,10 +49,13 @@
         },
         methods: {
             signUp() {
-                if (!this.form.email || !this.form.password || this.form.password !== this.form.passwordRepeat) {
+                if (!this.form.name || !this.form.email || !this.form.password || this.form.password !== this.form.passwordRepeat) {
                     if (this.form.password !== this.form.passwordRepeat) {
                         this.errorMessage = "Hesla nejsou stejná"
-                    } else {
+                    } else if (this.form.name.length > 30) {
+                        this.errorMessage = "Jméno nesmí mít více jak 30 znaků"
+                    }
+                    else {
                         this.errorMessage = "Vyplňte všechny údaje"
                     }
                     return;

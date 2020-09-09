@@ -33,6 +33,11 @@
                         {{ link.url }}
                     </a>
                 </div>
+                <div v-if="user.loggedIn && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
+                    <InputField v-if="showAnalysisInput" v-model="newAnalysisLink" placeholder="Vložte odkaz" class="text-lg block mt-4"/>
+                    <button v-if="!showAnalysisInput" @click="showAnalysisInput = true" type="button" class="text-primary text-lg mt-2">+ Přidat odkaz</button>
+                    <button v-if="showAnalysisInput" @click="addLink('analysisLinks')" type="button" class="text-primary text-lg mt-2">Odeslat odkaz na kontrolu</button>
+                </div>
             </div>
             <div class="mt-10">
                 <p class="text-3xl font-medium">Audio knihy</p>
@@ -41,7 +46,22 @@
                         <span class="text-primary"> {{ getLinkType(link) }} -</span>
                         <span> {{ link.url.split("/")[2] }} </span>
                     </a>
-                    <p class="text-lg mt-4 text-note">Víš o dalších audio knihách nebo rozborech? Přihlaš se a přidej je! Pomůžeš tak dalším co tady hledají informace :)</p>
+                    <p v-if="!user.loggedIn" class="text-lg mt-4 text-note">Víš o dalších audio knihách nebo rozborech? Přihlaš se a přidej je! Pomůžeš tak dalším co tady hledají informace :)</p>
+                </div>
+                <div v-if="user.loggedIn && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
+                    <InputField v-if="showAudioBookInput" v-model="newAudioBookLink" placeholder="Vložte odkaz" class="text-lg mt-4"/>
+                    <div v-if="showAudioBookInput" class="inline-block relative w-32 text-primary">
+                        <select v-model="newAudioBookType" class="ml-2 text-lg focus:outline-none appearance-none bg-background border-2 border-brand rounded-lg pl-3 pr-12 py-1">
+                            <option value="cracked">Cracklá</option>
+                            <option value="free">Zdarma</option>
+                            <option value="paid">Placená</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center mt-2">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                    <button v-if="!showAudioBookInput" @click="showAudioBookInput = true" type="button" class="text-primary text-lg mt-2">+ Přidat odkaz</button>
+                    <button v-if="showAudioBookInput" @click="addLink('audioBookLinks')" type="button" class="block text-primary text-lg mt-2">Odeslat odkaz na kontrolu</button>
                 </div>
                 <p v-else class="text-lg mt-4 text-note">Vypadá to, že k této knize audio knihy nikdo nepřidal nebo neexistují. Jestli o nějaké víš, můžeš se přihlásit a doplnit ji!</p>
             </div>
@@ -51,12 +71,22 @@
 
 <script>
     import { db } from '../../db'
+    import InputField from "../components/Core/InputField";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Book",
+        components: {
+            InputField
+        },
         data() {
             return {
-                book: {}
+                book: {},
+                showAnalysisInput: false,
+                showAudioBookInput: false,
+                newAnalysisLink: null,
+                newAudioBookLink: null,
+                newAudioBookType: null
             }
         },
         created() {
@@ -72,6 +102,9 @@
             });
         },
         computed: {
+            ...mapGetters({
+                user: "user"
+            }),
             analysisLinks: function () {
                 if (this.book.analysisLinks === undefined) {
                     return [];
@@ -82,7 +115,7 @@
                     if (link.status === "accepted") {
                         acceptedLinks.push(link);
                     }
-                })
+                });
 
                 return acceptedLinks;
             },
@@ -111,6 +144,45 @@
                     default:
                         return "Cracklá";
                 }
+            },
+            addLink(type) {
+                if (!this.newAnalysisLink && type === "analysisLinks") {
+                    console.log("chybí analysis link")
+                    return;
+                }
+
+                if (!this.newAudioBookType || !this.newAudioBookLink) {
+                    console.log("chybí audobook veci")
+                    return;
+                }
+
+                let newLinks = this.book[type];
+
+                if (type === "analysisLinks") {
+                    newLinks.push({
+                        url: this.newAnalysisLink,
+                        status: "pending",
+                        createdBy: db.doc('users/' + this.user.data.uid)
+                    });
+                } else {
+                    newLinks.push({
+                        url: this.newAudioBookLink,
+                        type: this.newAudioBookType,
+                        status: "pending",
+                        createdBy: db.doc('users/' + this.user.data.uid)
+                    });
+                }
+
+                db.collection("books").doc(this.book.id).update({
+                    [type]: newLinks
+                }).then(function() {
+                    console.log("Document successfully updated!");
+                }).catch(err => {
+                    console.log(err)
+                });
+
+                this.showAnalysisInput = false;
+                this.newAnalysisLink = null;
             }
         }
     }

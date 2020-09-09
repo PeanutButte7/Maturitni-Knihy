@@ -10,7 +10,9 @@ export const createUserInFirestore = functions.auth.user().onCreate((user) => {
             uid: user.uid,
             displayName: user.displayName,
             contributions: 0,
-            badges: null
+            badges: null,
+            banned: false,
+            role: "Contributor"
     })
         .then(() => {
             console.log("User account created!");

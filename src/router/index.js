@@ -9,6 +9,7 @@ import Admin from "../views/Admin/Admin";
 import AdminAddBook from "../views/Admin/AdminAddBook";
 import Book from "../views/Book";
 import PendingList from "../views/Admin/PendingList";
+import EditProfile from "../views/EditProfile";
 
 
 Vue.use(VueRouter);
@@ -33,6 +34,12 @@ const routes = [
         path: '/kniha/:id',
         name: 'book',
         component: Book,
+        props: true
+    },
+    {
+        path: '/profil/:id',
+        name: 'profile',
+        component: EditProfile,
         props: true
     },
     {

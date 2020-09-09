@@ -17,6 +17,10 @@ Vue.use(firestorePlugin);
 
 // Sets up local user profile data
 firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+        return;
+    }
+
     db.collection("users").doc(user.uid).get().then((doc) => {
         if (doc.exists) {
             store.dispatch("fetchUser", {
