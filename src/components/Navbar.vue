@@ -1,5 +1,5 @@
 <template>
-    <nav id="navbar" class="flex items-center justify-between flex-wrap text-primary text-lg">
+    <nav id="navbar" class="hidden lg:flex items-center justify-between flex-wrap text-primary text-lg">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
             <router-link to="/" class="text-brand">Hlavní stránka</router-link>
         </div>
