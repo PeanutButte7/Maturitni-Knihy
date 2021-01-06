@@ -8,9 +8,12 @@ import { firestorePlugin } from 'vuefire'
 import * as firebase from "firebase/app"
 import "firebase/auth";
 import 'firebase/firestore'
+import "firebase/analytics"
 
 import './styles/index.css';
 import {db} from "../db";
+
+firebase.analytics();
 
 Vue.config.productionTip = false;
 Vue.use(firestorePlugin);
