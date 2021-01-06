@@ -25,7 +25,7 @@ firebase.auth().onAuthStateChanged(user => {
         if (doc.exists) {
             store.dispatch("fetchUser", {
                 uid: user.uid,
-                displayName: user.displayName,
+                displayName: doc.data().displayName,
                 role: doc.data().role,
                 contributions: doc.data().contributions,
                 badges: doc.data().badges

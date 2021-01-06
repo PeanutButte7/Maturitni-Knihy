@@ -30,6 +30,9 @@ export default new Vuex.Store({
         // Makes changes to users data
         SET_USER(state, data) {
             state.user.data = data;
+        },
+        SET_DISPLAYNAME(state, value) {
+            state.user.data.displayName = value;
         }
     },
     // Commits mutations
@@ -47,6 +50,9 @@ export default new Vuex.Store({
             } else {
                 commit("SET_USER", null);
             }
+        },
+        changeUserDisplayName({ commit }, displayName) {
+            commit("SET_DISPLAYNAME", displayName);
         }
     }
 });

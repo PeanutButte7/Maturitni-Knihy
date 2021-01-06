@@ -1,7 +1,7 @@
 <template>
     <div id="editProfile" class="text-primary text-xl">
-        <h1 class="text-5xl font-medium inline-block"> {{ user.displayName }} </h1>
-        <p class="inline-block ml-5">Počet příspěvků: {{ user.contributions }}</p>
+        <h1 class="text-5xl font-medium inline-block"> {{ user.data.displayName }} </h1>
+        <p class="inline-block ml-5">Počet příspěvků: {{ user.data.contributions }}</p>
         <button v-if="!showEditNameInput" @click="showEditNameInput = true" class="text-brand text-bold block">Upravit jméno</button>
         <div v-if="showEditNameInput" class="my-5">
             <InputField v-model="newName" placeholder="Zadejte nové jméno" class="text-lg block"/>
@@ -16,6 +16,8 @@
     import {db} from "../../db";
     import firebase from "firebase";
     import InputField from "../components/Core/InputField";
+    import store from "@/store";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "EditProfile",
@@ -24,27 +26,20 @@
         },
         data() {
             return {
-                user: {},
                 showEditNameInput: false,
                 newName: null,
                 errorMessage: null
             }
         },
-        created() {
-            db.collection("users").doc(this.$route.params.id).get().then(doc => {
-                if (doc.exists) {
-                    this.user = doc.data();
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                }
-            }).catch(function(error) {
-                console.log("Error getting document:", error);
-            });
+        computed: {
+          ...mapGetters({
+            user: "user"
+          })
         },
         methods: {
             signOut() {
                 firebase.auth().signOut().then(() => {
+                    store.dispatch("fetchUser", null)
                     this.$router.replace({
                         name: "home"
                     });
@@ -53,13 +48,16 @@
             changeName() {
                if (this.newName == null) {
                    this.errorMessage = "Jméno nesmí být prázdné"
+                   return;
                } else if (this.newName.length > 30) {
                    this.errorMessage = "Jméno nesmí mít více jak 30 znaků"
+                   return;
                }
 
-               db.collection("users").doc(this.user.uid).update({
+               db.collection("users").doc(this.user.data.uid).update({
                    displayName: this.newName
                }).then(() => {
+                   store.dispatch("changeUserDisplayName", this.newName)
                    this.newName = null;
                    this.showEditNameInput = null;
                    this.errorMessage = null;

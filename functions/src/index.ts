@@ -8,7 +8,7 @@ const db = admin.firestore();
 export const createUserInFirestore = functions.auth.user().onCreate((user) => {
     return db.collection("users").doc(user.uid).set({
             uid: user.uid,
-            displayName: user.displayName,
+            displayName: user.email,
             contributions: 0,
             badges: null,
             banned: false,

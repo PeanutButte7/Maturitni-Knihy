@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div id="mobile-table" class="text-primary text-base font-light mt-5">
+        <div id="mobile-table" class="lg:hidden text-primary text-base font-light mt-5">
             <div @click="linkToBook(book)" v-for="(book, index) in shownBooks" :key="index" class="bg-highlight rounded-lg p-4 mb-3">
                 <p class="font-medium text-xl">{{ book.name }}</p>
                 <p>{{ book.author }}</p>
