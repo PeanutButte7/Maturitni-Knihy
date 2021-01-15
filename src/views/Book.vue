@@ -64,6 +64,8 @@
                     <button v-if="showAudioBookInput" @click="addLink('audioBookLinks')" type="button" class="block text-primary text-lg mt-2">Odeslat odkaz na kontrolu</button>
                 </div>
                 <p v-else class="text-lg mt-4 text-note">Vypadá to, že k této knize audio knihy nikdo nepřidal nebo neexistují. Jestli o nějaké víš, můžeš se přihlásit a doplnit ji!</p>
+                <p v-if="showThankYouText && !this.errorMessage" class="text-lg mt-4 text-brand">Díky za pomoc! Tvůj odkaz byl odeslán na schválení. Jakmile ho zkontrolujeme, přidáme ti fiktivní internetové bodíky. Jestli chceš, můžeš se později podívat, jak ses posunul v tabulce!</p>
+                <p v-if="this.errorMessage" class="text-lg text-red-500 mt-5">{{ this.errorMessage }}</p>
             </div>
         </div>
     </div>
@@ -86,7 +88,9 @@
                 showAudioBookInput: false,
                 newAnalysisLink: null,
                 newAudioBookLink: null,
-                newAudioBookType: null
+                newAudioBookType: null,
+                showThankYouText: false,
+                errorMessage: null,
             }
         },
         created() {
@@ -146,14 +150,26 @@
                 }
             },
             addLink(type) {
-                if (!this.newAnalysisLink && type === "analysisLinks") {
-                    console.log("chybí analysis link")
+                if (this.newAnalysisLink && type === "analysisLinks") {
+                    if (this.newAnalysisLink.length > 150) {
+                        this.errorMessage = "Promiň ale odkaz musí mít méně jak 150 znaků. Snažíme se tímto zabránit nechtěnému spamu"
+                        return;
+                    }
+                } else if (!this.newAnalysisLink && type === "analysisLinks"){
+                    this.errorMessage = "Před odesláním je potřeba pole vyplnit"
                     return;
                 }
 
-                if (!this.newAudioBookType || !this.newAudioBookLink) {
-                    console.log("chybí audobook veci")
+                if (type === "audioBookLinks" && (!this.newAudioBookType || !this.newAudioBookLink)) {
+                    this.errorMessage = "Před odesláním je potřeba pole vyplnit"
                     return;
+                }
+
+                if (type === "audioBookLinks" && this.newAudioBookLink) {
+                    if (this.newAudioBookLink.length > 150) {
+                        this.errorMessage = "Promiň ale odkaz musí mít méně jak 150 znaků. Snažíme se tímto zabránit nechtěnému spamu"
+                        return;
+                    }
                 }
 
                 let newLinks = this.book[type];
@@ -175,14 +191,18 @@
 
                 db.collection("books").doc(this.book.id).update({
                     [type]: newLinks
-                }).then(function() {
-                    console.log("Document successfully updated!");
+                }).then(() => {
+                    this.showThankYouText = true
                 }).catch(err => {
                     console.log(err)
                 });
 
                 this.showAnalysisInput = false;
                 this.newAnalysisLink = null;
+                this.showAudioBookInput = false;
+                this.newAudioBookLink = null;
+                this.newAudioBookType = null;
+                this.errorMessage = null;
             }
         }
     }

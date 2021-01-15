@@ -10,7 +10,8 @@ export default new Vuex.Store({
         user: {
             loggedIn: false, // Was the user authenticated?
             data: null // Information about the logged-in user
-        }
+        },
+        menuActive: false
     },
     // Interface for outside requests
     getters: {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
         // },
         user(state){
             return state.user
+        },
+        menuActive(state) {
+            return state.menuActive
         }
     },
     // Changes state data
@@ -33,6 +37,9 @@ export default new Vuex.Store({
         },
         SET_DISPLAYNAME(state, value) {
             state.user.data.displayName = value;
+        },
+        SET_MENUACTIVE(state, value) {
+            state.menuActive = value;
         }
     },
     // Commits mutations
@@ -53,6 +60,9 @@ export default new Vuex.Store({
         },
         changeUserDisplayName({ commit }, displayName) {
             commit("SET_DISPLAYNAME", displayName);
+        },
+        setMenuActive({ commit }, menuActive) {
+            commit("SET_MENUACTIVE", menuActive);
         }
     }
 });

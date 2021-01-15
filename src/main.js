@@ -37,7 +37,7 @@ firebase.auth().onAuthStateChanged(user => {
             console.log("No such document!");
         }
     }).catch(function(error) {
-    console.log("Error getting documents: ", error);
+        console.log("Error getting documents: ", error);
     });
 });
 
