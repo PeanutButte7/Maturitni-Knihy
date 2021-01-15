@@ -46,7 +46,6 @@
                         <span class="text-primary"> {{ getLinkType(link) }} -</span>
                         <span> {{ link.url.split("/")[2] }} </span>
                     </a>
-                    <p v-if="!user.loggedIn" class="text-lg mt-4 text-note">Víš o dalších audio knihách nebo rozborech? Přihlaš se a přidej je! Pomůžeš tak dalším co tady hledají informace :)</p>
                 </div>
                 <div v-if="user.loggedIn && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
                     <InputField v-if="showAudioBookInput" v-model="newAudioBookLink" placeholder="Vložte odkaz" class="text-lg mt-4"/>
@@ -63,7 +62,7 @@
                     <button v-if="!showAudioBookInput" @click="showAudioBookInput = true" type="button" class="text-primary text-lg mt-2">+ Přidat odkaz</button>
                     <button v-if="showAudioBookInput" @click="addLink('audioBookLinks')" type="button" class="block text-primary text-lg mt-2">Odeslat odkaz na kontrolu</button>
                 </div>
-                <p v-else class="text-lg mt-4 text-note">Vypadá to, že k této knize audio knihy nikdo nepřidal nebo neexistují. Jestli o nějaké víš, můžeš se přihlásit a doplnit ji!</p>
+                <p v-if="!user.loggedIn" class="text-lg mt-4 text-note">Víš o dalších audioknihách nebo rozborech? <router-link :to=" { name: 'signUp'}" class="underline">Přihlaš se</router-link> a přidej je! Pomůžeš tak dalším co tady hledají informace :)</p>
                 <p v-if="showThankYouText && !this.errorMessage" class="text-lg mt-4 text-brand">Díky za pomoc! Tvůj odkaz byl odeslán na schválení. Jakmile ho zkontrolujeme, přidáme ti fiktivní internetové bodíky. Jestli chceš, můžeš se později podívat, jak ses posunul v tabulce!</p>
                 <p v-if="this.errorMessage" class="text-lg text-red-500 mt-5">{{ this.errorMessage }}</p>
             </div>
