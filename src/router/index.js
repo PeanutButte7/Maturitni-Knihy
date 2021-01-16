@@ -10,6 +10,7 @@ import AdminAddBook from "../views/Admin/AdminAddBook";
 import Book from "../views/Book";
 import PendingList from "../views/Admin/PendingList";
 import EditProfile from "../views/EditProfile";
+import Faq from "@/views/Faq";
 
 
 Vue.use(VueRouter);
@@ -62,6 +63,11 @@ const routes = [
                 component: PendingList
             }
         ]
+    },
+    {
+        path: '/faq',
+        name: 'faq',
+        component: Faq,
     }
 ];
 

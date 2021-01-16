@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <Navbar class="mt-5 mx-8"/>
-        <router-view v-if="!menuActive" class="container mx-auto mt-10"/>
+        <router-view v-if="!menuActive" class="container mx-auto mt-10 mb-10"/>
     </div>
 </template>
 
