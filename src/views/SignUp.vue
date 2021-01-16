@@ -34,6 +34,7 @@
                     <button @click="addName" class="bg-brand text-gray-900 font-bold border-2 border-brand rounded-lg px-6 py-1" type="button">Dokončit vytvoření</button>
                 </div>
             </div>
+            <p class="text-lg mt-4 text-note">Už máš účet? <router-link :to=" { name: 'login'}" class="underline">Přihlaš se!</router-link></p>
             <p v-if="this.errorMessage" class="text-red-500 mt-5">{{ this.errorMessage }}</p>
         </form>
     </div>
