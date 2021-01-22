@@ -47,6 +47,7 @@
     import InputField from "../components/Core/InputField";
     import {db} from "../../db";
     import store from "@/store";
+    import text from "@/text.json";
 
     export default {
         name: "SignUp",
@@ -60,7 +61,7 @@
                     name: null,
                     email: null,
                     password: null,
-                    passwordRepeat: null
+                    passwordRepeat: null,
                 },
                 errorMessage: null,
                 step: "accountCreation"
@@ -78,7 +79,7 @@
                         this.errorMessage = "Hesla nejsou stejná"
                     }
                     else {
-                        this.errorMessage = "Vyplňte všechny údaje"
+                        this.errorMessage = text.errorMessages.missingDetails
                     }
                     return;
                 }
@@ -119,10 +120,10 @@
             },
             addName() {
                 if (!this.form.name) {
-                    this.errorMessage = "Jméno nesmí být prázdné"
+                    this.errorMessage = text.errorMessages.nameEmpty
                     return;
                 } else if (this.form.name.length > 30) {
-                    this.errorMessage = "Jméno nesmí mít více jak 30 znaků"
+                    this.errorMessage = text.errorMessages.nameTooLong
                     return;
                 }
 

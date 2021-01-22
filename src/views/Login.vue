@@ -22,6 +22,7 @@
     import firebase from "firebase";
     import InputLabel from "../components/Core/InputLabel";
     import InputField from "../components/Core/InputField";
+    import text from "@/text.json";
 
     export default {
         name: "Login",
@@ -41,7 +42,7 @@
         methods: {
             login() {
                 if (!this.form.email || !this.form.password) {
-                    this.errorMessage = "Vyplňte všechny údaje";
+                    this.errorMessage = text.errorMessages.missingDetails
                     return;
                 }
 

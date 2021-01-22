@@ -18,6 +18,7 @@
     import InputField from "../components/Core/InputField";
     import store from "@/store";
     import {mapGetters} from "vuex";
+    import text from "@/text.json";
 
     export default {
         name: "EditProfile",
@@ -47,10 +48,10 @@
             },
             changeName() {
                if (this.newName == null) {
-                   this.errorMessage = "Jméno nesmí být prázdné"
+                   this.errorMessage = text.errorMessages.nameEmpty
                    return;
                } else if (this.newName.length > 30) {
-                   this.errorMessage = "Jméno nesmí mít více jak 30 znaků"
+                   this.errorMessage = text.errorMessages.nameTooLong
                    return;
                }
 

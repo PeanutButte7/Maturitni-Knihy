@@ -1,0 +1,9 @@
+{
+    "errorMessages": {
+        "missingDetails": "Vyplňte všechny údaje",
+        "nameTooLong": "Jméno nesmí mít více jak 30 znaků",
+        "nameEmpty": "Jméno nesmí být prázdné",
+        "fieldEmpty": "Před odesláním je potřeba pole vyplnit",
+        "linkTooLong": "Promiň ale odkaz musí mít méně jak 150 znaků. Snažíme se tímto zabránit nechtěnému spamu"
+    }
+}

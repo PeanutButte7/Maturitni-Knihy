@@ -74,6 +74,7 @@
     import { db } from '../../db'
     import InputField from "../components/Core/InputField";
     import {mapGetters} from "vuex";
+    import text from "@/text.json";
 
     export default {
         name: "Book",
@@ -151,22 +152,22 @@
             addLink(type) {
                 if (this.newAnalysisLink && type === "analysisLinks") {
                     if (this.newAnalysisLink.length > 150) {
-                        this.errorMessage = "Promiň ale odkaz musí mít méně jak 150 znaků. Snažíme se tímto zabránit nechtěnému spamu"
+                        this.errorMessage = text.errorMessages.linkTooLong
                         return;
                     }
                 } else if (!this.newAnalysisLink && type === "analysisLinks"){
-                    this.errorMessage = "Před odesláním je potřeba pole vyplnit"
+                    this.errorMessage = text.errorMessages.fieldEmpty
                     return;
                 }
 
                 if (type === "audioBookLinks" && (!this.newAudioBookType || !this.newAudioBookLink)) {
-                    this.errorMessage = "Před odesláním je potřeba pole vyplnit"
+                    this.errorMessage = text.errorMessages.fieldEmpty
                     return;
                 }
 
                 if (type === "audioBookLinks" && this.newAudioBookLink) {
                     if (this.newAudioBookLink.length > 150) {
-                        this.errorMessage = "Promiň ale odkaz musí mít méně jak 150 znaků. Snažíme se tímto zabránit nechtěnému spamu"
+                        this.errorMessage = text.errorMessages.linkTooLong
                         return;
                     }
                 }
