@@ -4,6 +4,7 @@
             <p v-if="hasPendingLinks(book)">{{ book.name }}</p>
             <div v-for="(analysisLink, analysisLinkIndex) in book.analysisLinks" :key="analysisLinkIndex" class="text-lg text-note">
                 <div v-if="analysisLink.status === 'pending'" class="mb-4 flex items-center">
+                    <p class="mr-5 text-primary italic font-hairline">Rozbor:</p>
                     <button @click="changeLinkStatus(book, analysisLinkIndex, 'accepted', 'analysisLinks')" type="button" class="mr-2">
                         <svg class="stroke-current text-brand inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </button>
@@ -13,8 +14,9 @@
                     </button>
                 </div>
             </div>
-            <div v-for="(audioBookLinks, audioBookLinksIndex) in book.audioBookLinks" :key="audioBookLinksIndex + 100" class="text-lg text-note">
+            <div v-for="(audioBookLinks, audioBookLinksIndex) in book.audioBookLinks" :key="audioBookLinksIndex + 1000" class="text-lg text-note">
                 <div v-if="audioBookLinks.status === 'pending'" class="mb-4 flex items-center border-b border-accent">
+                    <p class="mr-5 text-primary italic font-hairline">Audiokniha:</p>
                     <button @click="changeLinkStatus(book, audioBookLinksIndex, 'accepted', 'audioBookLinks')" type="button" class="mr-2">
                         <svg class="stroke-current text-brand inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </button>
@@ -30,6 +32,7 @@
 
 <script>
     import {db} from "../../../db";
+    import firebase from "firebase/app";
 
     export default {
         name: "PendingList",
@@ -46,10 +49,20 @@
                 db.collection("books").doc(book.id).update({
                     [type]: newLinks
                 }).then(function() {
+                    if (newLinks[index].status === "accepted") {
+                        db.collection("users").doc(newLinks[index].createdBy.uid).update({
+                            contributions: firebase.firestore.FieldValue.increment(1)
+                        });
+                    }
                     console.log("Document successfully updated!");
                 }).catch(err => {
                     console.log(err)
                 })
+            },
+            increaseUserContributions(user) {
+                db.collection("users").doc(user).update({
+                    contributions: firebase.firestore.FieldValue.increment(1)
+                });
             },
             hasPendingLinks(book) {
                 let hasPendingLinks;

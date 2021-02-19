@@ -33,7 +33,7 @@
                         {{ link.url }}
                     </a>
                 </div>
-                <div v-if="user.loggedIn && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
+                <div v-if="user.loggedIn && user.data.verified && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
                     <InputField v-if="showAnalysisInput" v-model="newAnalysisLink" placeholder="Vložte odkaz" class="text-lg block mt-4"/>
                     <button v-if="!showAnalysisInput" @click="showAnalysisInput = true" type="button" class="text-primary text-lg mt-2">+ Přidat odkaz</button>
                     <button v-if="showAnalysisInput" @click="addLink('analysisLinks')" type="button" class="text-primary text-lg mt-2">Odeslat odkaz na kontrolu</button>
@@ -47,7 +47,7 @@
                         <span> {{ link.url.split("/")[2] }} </span>
                     </a>
                 </div>
-                <div v-if="user.loggedIn && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
+                <div v-if="user.loggedIn && user.data.verified && (user.data.role === 'Admin' || user.data.role === 'Contributor')">
                     <InputField v-if="showAudioBookInput" v-model="newAudioBookLink" placeholder="Vložte odkaz" class="text-lg mt-4"/>
                     <div v-if="showAudioBookInput" class="inline-block relative w-32 text-primary">
                         <select v-model="newAudioBookType" class="ml-2 text-lg focus:outline-none appearance-none bg-background border-2 border-brand rounded-lg pl-3 pr-12 py-1">
@@ -62,9 +62,15 @@
                     <button v-if="!showAudioBookInput" @click="showAudioBookInput = true" type="button" class="text-primary text-lg mt-2">+ Přidat odkaz</button>
                     <button v-if="showAudioBookInput" @click="addLink('audioBookLinks')" type="button" class="block text-primary text-lg mt-2">Odeslat odkaz na kontrolu</button>
                 </div>
-                <p v-if="!user.loggedIn" class="text-lg mt-4 text-note">Víš o dalších audioknihách nebo rozborech? <router-link :to=" { name: 'signUp'}" class="underline">Přihlaš se</router-link> a přidej je! Pomůžeš tak dalším co tady hledají informace :)</p>
-                <p v-if="showThankYouText && !this.errorMessage" class="text-lg mt-4 text-brand">Díky za pomoc! Tvůj odkaz byl odeslán na schválení. Jakmile ho zkontrolujeme, přidáme ti fiktivní internetové bodíky. Jestli chceš, můžeš se později podívat, jak ses posunul v tabulce!</p>
+              <p v-if="user.loggedIn && !user.data.verified" class="text-lg mt-4 text-note">Pokud chcete přidávat odkazy ověřte si prosím svůj email</p>
+              <p v-if="!user.loggedIn" class="text-lg mt-4 text-note">Víte o dalších audioknihách nebo rozborech? <router-link :to=" { name: 'signUp'}" class="underline">Přihlašte se</router-link> a přidejte je! Pomůžete tak dalším co tady hledají informace :)</p>
+                <p v-if="showThankYouText && !this.errorMessage" class="text-lg mt-4 text-brand">Děkujeme za pomoc! Váš odkaz byl odeslán na schválení. Jakmile ho zkontrolujeme, přidáme vám fiktivní internetové bodíky. Jestli chcete, můžete se později podívat, jak jste se posunuli v tabulce!</p>
                 <p v-if="this.errorMessage" class="text-lg text-red-500 mt-5">{{ this.errorMessage }}</p>
+            </div>
+            <div class="mt-10">
+                <p class="text-3xl font-medium">Školy zahrnující tuto knihu</p>
+                <span v-for="school in schools" :key="school.name" class="text-lg mr-2">{{school.name}}</span>
+                <p class="text-lg mt-4 text-note">Bohužel nejsme schopni udržovat kompletní přehled o všech školách, je tak možné, že se zde vaše škola nemusí vyskytovat. Doporučujeme zkontrolovat seznam přímo na stránkách vaší školy.</p>
             </div>
         </div>
     </div>
@@ -84,6 +90,7 @@
         data() {
             return {
                 book: {},
+                schools: [],
                 showAnalysisInput: false,
                 showAudioBookInput: false,
                 newAnalysisLink: null,
@@ -97,6 +104,10 @@
             db.collection("books").doc(this.$route.params.id.split("_")[0]).get().then(doc => {
                 if (doc.exists) {
                     this.book = doc.data();
+
+                    doc.data().schoolList.forEach(school => {
+                        this.getSchool(school)
+                    })
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
@@ -139,6 +150,18 @@
             }
         },
         methods: {
+            getSchool(school) {
+                db.collection("schools").doc(school).get().then(doc => {
+                    if (doc.exists) {
+                        this.schools.push(doc.data());
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
+                    }
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
+            },
             getLinkType(link) {
                 switch (link.type) {
                     case "paid":

@@ -31,7 +31,8 @@ firebase.auth().onAuthStateChanged(user => {
                 displayName: doc.data().displayName,
                 role: doc.data().role,
                 contributions: doc.data().contributions,
-                badges: doc.data().badges
+                badges: doc.data().badges,
+                verified: user.emailVerified
             })
         } else {
             console.log("No such document!");

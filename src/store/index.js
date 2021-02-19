@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -52,7 +51,8 @@ export default new Vuex.Store({
                     displayName: user.displayName,
                     role: user.role !== null ? user.role : "",
                     contributions: user.contributions,
-                    badges: user.badges
+                    badges: user.badges,
+                    verified: user.verified
                 });
             } else {
                 commit("SET_USER", null);

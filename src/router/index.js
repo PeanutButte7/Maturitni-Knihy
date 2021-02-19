@@ -11,7 +11,7 @@ import Book from "../views/Book";
 import PendingList from "../views/Admin/PendingList";
 import EditProfile from "../views/EditProfile";
 import Faq from "@/views/Faq";
-
+import Leaderboard from "@/views/Leaderboard";
 
 Vue.use(VueRouter);
 
@@ -22,14 +22,14 @@ const routes = [
         component: Home
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login
+        path: '/login',
+        name: 'login',
+        component: Login
     },
     {
-      path: '/signUp',
-      name: 'signUp',
-      component: SignUp
+        path: '/signUp',
+        name: 'signUp',
+        component: SignUp
     },
     {
         path: '/kniha/:id',
@@ -68,6 +68,11 @@ const routes = [
         path: '/faq',
         name: 'faq',
         component: Faq,
+    },
+    {
+        path: '/zebricek',
+        name: 'leaderboard',
+        component: Leaderboard,
     }
 ];
 

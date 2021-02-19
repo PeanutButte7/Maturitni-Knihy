@@ -7,6 +7,18 @@
                 <Checkbox v-model="searchForAuthor" checkboxId="authorCheckbox" class="inline-block">Vyhledat dle autora</Checkbox>
                 <Checkbox  v-model="onlyAudioBooks" checkbox-id="audioBookCheckbox" class="inline-block lg:ml-10 mt-2 lg:mt-0">Pouze tituly s audioknihou</Checkbox>
             </div>
+            <div class="mt-2 mb-6">
+                <span class="text-xl lg:text-2xl text-primary mr-5">Filtrovat dle školy</span>
+                <div class="inline-block relative w-56 text-primary">
+                    <select v-model="schoolFilter" class="text-lg focus:outline-none appearance-none bg-background border-2 border-brand rounded-lg pl-3 pr-24 py-1">
+                        <option value="">Jakákoliv</option>
+                        <option v-for="school in schools" :key="school.name" :value="school.id">{{ school.name }}</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
             <input @input="search" v-model="searchedText" :placeholder="placeholder" type="text" class="text-2xl focus:outline-none bg-background text-primary border-2 border-brand rounded-lg px-3 py-1 w-full">
         </div>
         <div v-if="books.length === 0" class="mt-8">
@@ -77,11 +89,13 @@
         },
         data() {
             return {
+                schools: [],
                 books: [],
                 shownBooks: [],
                 searchedText: "",
                 searchForAuthor: false,
-                onlyAudioBooks: false
+                onlyAudioBooks: false,
+                schoolFilter: ""
             }
         },
         created() {
@@ -98,6 +112,9 @@
         watch: {
             onlyAudioBooks() {
                 this.search();
+            },
+            schoolFilter() {
+                this.search();
             }
         },
         methods: {
@@ -110,6 +127,7 @@
                 const field = this.searchForAuthor ? "author" : "name";
                 let searchedBooks = [];
                 let filteredBooks = [];
+                let schoolFilteredBooks = [];
 
                 if (this.cleanedSearchText !== "") {
                     this.books.forEach(book => {
@@ -127,11 +145,21 @@
                     filteredBooks = searchedBooks;
                 }
 
-                this.shownBooks = filteredBooks;
+                if (this.schoolFilter !== "") {
+                    schoolFilteredBooks = filteredBooks.filter(book => {
+                        if (book.schoolList === undefined) return false
+                        if (book.schoolList.includes(this.schoolFilter)) return true
+                    })
+                } else {
+                    schoolFilteredBooks = filteredBooks
+                }
+
+                this.shownBooks = schoolFilteredBooks;
             }
         },
         firestore: {
-            books: db.collection("books").orderBy("name")
+            books: db.collection("books").orderBy("name"),
+            schools: db.collection("schools").orderBy("name")
         }
     }
 </script>

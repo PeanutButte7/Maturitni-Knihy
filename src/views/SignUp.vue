@@ -25,16 +25,10 @@
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
             </div>
-            <div v-else-if="step === 'nameCreation'">
-                <div class="mb-12">
-                    <InputLabel>Váš účet byl vytvořen, nyní doplňte jméno nebo přezdívku</InputLabel>
-                    <InputField v-model="form.name" placeholder="Pája"/>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button @click="addName" class="bg-brand text-gray-900 font-bold border-2 border-brand rounded-lg px-6 py-1" type="button">Dokončit vytvoření</button>
-                </div>
+            <div v-else-if="step === 'emailVerification'" class="text-center">
+                <p class="text-xl font-bold text-primary">Účet byl vytvořen a byl vám zaslán verifikační email. Po jeho ověření budete moci začít přidávat příspěvky. Také si můžete změnit jméno na vašem profilu.</p>
             </div>
-            <p class="text-lg mt-4 text-note">Už máš účet? <router-link :to=" { name: 'login'}" class="underline">Přihlaš se!</router-link></p>
+            <p v-if="step === 'accountCreation'" class="text-lg mt-4 text-note">Už máš účet? <router-link :to=" { name: 'login'}" class="underline">Přihlaš se!</router-link></p>
             <p v-if="this.errorMessage" class="text-red-500 mt-5">{{ this.errorMessage }}</p>
         </form>
     </div>
@@ -58,7 +52,6 @@
         data() {
             return {
                 form: {
-                    name: null,
                     email: null,
                     password: null,
                     passwordRepeat: null,
@@ -90,22 +83,25 @@
                         this.step = "loading"
                         setInterval(() => {
                             db.collection("users").doc(data.user.uid).get().then((doc) => {
-                                if (doc.exists) {
-                                    this.step = "nameCreation"
+                                if (doc.exists && this.step === "loading") {
+                                    this.step = "emailVerification"
 
                                     store.dispatch("fetchUser", {
                                         uid: data.user.uid,
                                         displayName: doc.data().displayName,
                                         role: doc.data().role,
                                         contributions: doc.data().contributions,
-                                        badges: doc.data().badges
+                                        badges: doc.data().badges,
+                                        verified: firebase.auth().currentUser.emailVerified
                                     })
+
+                                    this.verifyEmail(data.user.uid)
                                 }
                             }).catch(function(error) {
                                 console.log("Error getting documents: ", error);
                             });
 
-                            if (this.step === "nameCreation") clearInterval();
+                            if (this.step === "emailVerification") clearInterval();
                         }, 500)
                     })
                     .catch(err => {
@@ -118,21 +114,11 @@
                         }
                     });
             },
-            addName() {
-                if (!this.form.name) {
-                    this.errorMessage = text.errorMessages.nameEmpty
-                    return;
-                } else if (this.form.name.length > 30) {
-                    this.errorMessage = text.errorMessages.nameTooLong
-                    return;
-                }
-
-                db.collection("users").doc(this.user.data.uid).update({
-                    displayName: this.form.name
-                }).then(() => {
-                    this.$router.push({ name: "home" });
-                }).catch(err => {
-                    this.errorMessage = err;
+            verifyEmail() {
+                firebase.auth().currentUser.sendEmailVerification().then(function() {
+                    console.log("Email sent")
+                }).catch(function(error) {
+                    console.log(error)
                 });
             }
         }

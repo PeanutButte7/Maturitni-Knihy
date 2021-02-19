@@ -6,7 +6,8 @@
             </div>
             <div class="w-full block flex-grow flex items-center lg:w-auto ml-5">
                 <div class="flex-grow">
-                    <router-link :to=" { name: 'faq' }" class="font-light">Otázky a odpovědi</router-link>
+                    <router-link :to=" { name: 'leaderboard' }" class="font-light ml-5">Žebříček</router-link>
+                    <router-link :to=" { name: 'faq' }" class="font-light ml-5">Otázky a odpovědi</router-link>
                 </div>
                 <div>
                 <span v-if="!user.loggedIn">
