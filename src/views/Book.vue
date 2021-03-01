@@ -69,7 +69,19 @@
             </div>
             <div class="mt-10">
                 <p class="text-3xl font-medium">Školy zahrnující tuto knihu</p>
-                <span v-for="school in schools" :key="school.name" class="text-lg mr-2">{{school.name}}</span>
+                <span v-for="school in linkedSchools" :key="school.name" class="text-lg mr-2">{{school.name}}</span>
+                <div v-if="user.loggedIn && user.data.verified && user.data.role === 'Admin'">
+                    <div v-if="showSchoolInput" class="inline-block relative w-32 text-primary">
+                        <select v-model="newSchoolLink" class="text-lg focus:outline-none appearance-none bg-background border-2 border-brand rounded-lg pl-3 pr-24 py-1">
+                            <option v-for="school in schools" :key="school.name" :value="school.id">{{ school.name }}</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                    <button v-if="!showSchoolInput" @click="showSchoolInput = true" type="button" class="text-primary text-lg mt-2">+ Přidat školu</button>
+                    <button v-if="showSchoolInput" @click="addSchool(newSchoolLink)" type="button" class="block text-primary text-lg mt-2">Odeslat odkaz do systému</button>
+                </div>
                 <p class="text-lg mt-4 text-note">Bohužel nejsme schopni udržovat kompletní přehled o všech školách, je tak možné, že se zde vaše škola nemusí vyskytovat. Doporučujeme zkontrolovat seznam přímo na stránkách vaší školy.</p>
             </div>
         </div>
@@ -81,6 +93,7 @@
     import InputField from "../components/Core/InputField";
     import {mapGetters} from "vuex";
     import text from "@/text.json";
+    import firebase from "firebase/app";
 
     export default {
         name: "Book",
@@ -91,8 +104,11 @@
             return {
                 book: {},
                 schools: [],
+                linkedSchools: [],
                 showAnalysisInput: false,
                 showAudioBookInput: false,
+                showSchoolInput: false,
+                newSchoolLink: null,
                 newAnalysisLink: null,
                 newAudioBookLink: null,
                 newAudioBookType: null,
@@ -104,10 +120,15 @@
             db.collection("books").doc(this.$route.params.id.split("_")[0]).get().then(doc => {
                 if (doc.exists) {
                     this.book = doc.data();
-
-                    doc.data().schoolList.forEach(school => {
-                        this.getSchool(school)
-                    })
+                    if (doc.data().schoolList === undefined) {
+                        db.collection("books").doc(this.$route.params.id.split("_")[0]).update({
+                            schoolList: []
+                        })
+                    } else {
+                        doc.data().schoolList.forEach(school => {
+                            this.getSchool(school)
+                        })
+                    }
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
@@ -150,10 +171,18 @@
             }
         },
         methods: {
+            addSchool(school) {
+                db.collection("books").doc(this.book.id).update({
+                    schoolList: firebase.firestore.FieldValue.arrayUnion(school)
+                })
+
+                this.showSchoolInput = false;
+                this.newSchoolLink = null;
+            },
             getSchool(school) {
                 db.collection("schools").doc(school).get().then(doc => {
                     if (doc.exists) {
-                        this.schools.push(doc.data());
+                        this.linkedSchools.push(doc.data());
                     } else {
                         // doc.data() will be undefined in this case
                         console.log("No such document!");
@@ -227,6 +256,9 @@
                 this.newAudioBookType = null;
                 this.errorMessage = null;
             }
+        },
+        firestore: {
+            schools: db.collection("schools").orderBy("name")
         }
     }
 </script>

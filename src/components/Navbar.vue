@@ -1,10 +1,10 @@
 <template>
     <div id="navbar">
         <nav id="desktop-menu" class="hidden lg:flex items-center justify-between flex-wrap text-primary text-lg">
-            <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <div class="flex items-center flex-shrink-0 text-white">
                 <router-link to="/" class="text-brand">Hlavní stránka</router-link>
             </div>
-            <div class="w-full block flex-grow flex items-center lg:w-auto ml-5">
+            <div class="w-full block flex-grow flex items-center lg:w-auto ml-3">
                 <div class="flex-grow">
                     <router-link :to=" { name: 'leaderboard' }" class="font-light ml-5">Žebříček</router-link>
                     <router-link :to=" { name: 'faq' }" class="font-light ml-5">Otázky a odpovědi</router-link>

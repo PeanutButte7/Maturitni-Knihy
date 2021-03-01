@@ -2,10 +2,6 @@
     <div>
         <h1 class="text-center text-3xl lg:text-6xl font-medium text-brand">Otázky a odpovědi</h1>
         <div class="mt-10 text-primary">
-            <div>
-                <h2 class="text-xl lg:text-3xl font-medium">Je stahování pirátěných audioknih legální?</h2>
-                <p class="text-lg font-light mt-2">V České Republice je stahování takzvaně "pirátěného" obsahu naprosto legální. Dokud ho nedistribujete, nemáte se čeho bát.</p>
-            </div>
             <div class="mt-10">
                 <h2 class="text-xl lg:text-3xl font-medium">Proč bych se měl přihlásit?</h2>
                 <p class="text-lg font-light mt-2">Abychom byli schopni udržovat a aktualizovat rozsáhlý seznam knih, je potřeba i vaše pomoct. Po přihlášení budete moci přidávat odkazy ke knihám a pomáhat tak ostatním uživatelům stránky. Budete navíc zobrazeni v žebříčku, kde můžete ke svému profilu přidat odkaz a zviditelnit tak například vaše sociální sítě.</p>

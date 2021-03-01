@@ -25,8 +25,9 @@
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
             </div>
-            <div v-else-if="step === 'emailVerification'" class="text-center">
+            <div v-else-if="step === 'emailVerification'" class="flex flex-col items-center text-center">
                 <p class="text-xl font-bold text-primary">Účet byl vytvořen a byl vám zaslán verifikační email. Po jeho ověření budete moci začít přidávat příspěvky. Také si můžete změnit jméno na vašem profilu.</p>
+                <Btn class="mt-4" @click.native="linkToName()">Na změnu jména</Btn>
             </div>
             <p v-if="step === 'accountCreation'" class="text-lg mt-4 text-note">Už máš účet? <router-link :to=" { name: 'login'}" class="underline">Přihlaš se!</router-link></p>
             <p v-if="this.errorMessage" class="text-red-500 mt-5">{{ this.errorMessage }}</p>
@@ -42,12 +43,14 @@
     import {db} from "../../db";
     import store from "@/store";
     import text from "@/text.json";
+    import Btn from "@/components/Core/Btn";
 
     export default {
         name: "SignUp",
         components: {
             InputField,
-            InputLabel
+            InputLabel,
+            Btn
         },
         data() {
             return {
@@ -66,6 +69,9 @@
             })
         },
         methods: {
+            linkToName() {
+                this.$router.push({name: 'profile', params: { id: this.user.data.uid  }})
+            },
             signUp() {
                 if (!this.form.email || !this.form.password || this.form.password !== this.form.passwordRepeat) {
                     if (this.form.password !== this.form.passwordRepeat) {

@@ -43,6 +43,17 @@
                 </div>
                 <button @click="addAudioBookLink" type="button" class="text-primary mt-2">+ Přidat odkaz</button>
             </div>
+            <div class="mb-6">
+                <InputLabel>Škola</InputLabel>
+                <div class="inline-block relative w-32 text-primary">
+                    <select v-model="form.school" class="text-lg focus:outline-none appearance-none bg-background border-2 border-brand rounded-lg pl-3 pr-24 py-1">
+                        <option v-for="school in schools" :key="school.name" :value="school.id">{{ school.name }}</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
             <Btn @click.native="createBook">Vytvořit knihu</Btn>
         </form>
         <p v-if="this.errorMessage" class="text-red-500 mt-5">{{ this.errorMessage }}</p>
@@ -71,8 +82,10 @@
                     author: null,
                     pages: null,
                     analysisLinks: [],
-                    audioBookLinks: []
+                    audioBookLinks: [],
+                    school: []
                 },
+                schools: [],
                 errorMessage: null,
                 uploadSuccessful: false,
             };
@@ -131,7 +144,8 @@
                     author: this.form.author,
                     pages: parseInt(this.form.pages, 10),
                     analysisLinks: this.form.analysisLinks,
-                    audioBookLinks: this.form.audioBookLinks
+                    audioBookLinks: this.form.audioBookLinks,
+                    schoolList: [this.form.school]
                 }).then(docRef => {
                     db.collection("books").doc(docRef.id).update({
                         id: docRef.id
@@ -157,6 +171,9 @@
             deleteAudioBookLink(index){
                 this.form.audioBookLinks.splice(index, 1);
             }
+        },
+        firestore: {
+            schools: db.collection("schools").orderBy("name")
         }
     }
 </script>

@@ -59,11 +59,6 @@
                     console.log(err)
                 })
             },
-            increaseUserContributions(user) {
-                db.collection("users").doc(user).update({
-                    contributions: firebase.firestore.FieldValue.increment(1)
-                });
-            },
             hasPendingLinks(book) {
                 let hasPendingLinks;
 
