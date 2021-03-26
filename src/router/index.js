@@ -12,6 +12,7 @@ import PendingList from "../views/Admin/PendingList";
 import EditProfile from "../views/EditProfile";
 import Faq from "@/views/Faq";
 import Leaderboard from "@/views/Leaderboard";
+import ForgotPassword from "@/views/ForgotPassword";
 
 Vue.use(VueRouter);
 
@@ -73,6 +74,11 @@ const routes = [
         path: '/zebricek',
         name: 'leaderboard',
         component: Leaderboard,
+    },
+    {
+        path: '/zapomenuteHeslo',
+        name: 'forgotPassword',
+        component: ForgotPassword,
     }
 ];
 

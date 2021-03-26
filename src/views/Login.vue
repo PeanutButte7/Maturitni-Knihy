@@ -13,6 +13,7 @@
                 <button @click="login" class="bg-brand text-gray-900 font-bold border-2 border-brand rounded-lg px-6 py-1" type="button">Přihlásit se</button>
             </div>
             <p class="text-lg mt-4 text-note">Ještě nemáš účet? <router-link :to=" { name: 'signUp'}" class="underline">Vytvoř si ho!</router-link></p>
+            <p class="text-lg mt-4 text-note"><router-link :to=" { name: 'forgotPassword'}" class="underline">Zapomenuté heslo</router-link></p>
             <p v-if="this.errorMessage" class="text-red-500 mt-5">{{ this.errorMessage }}</p>
         </form>
     </div>

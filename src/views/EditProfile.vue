@@ -8,7 +8,7 @@
             <button @click="changeName" type="button" class="text-primary text-lg mt-2">Změnit jméno</button>
             <p v-if="this.errorMessage" class="text-red-500 mt-5 text-lg">{{ this.errorMessage }}</p>
         </div>
-        <button @click="signOut" class="mt-10 text-brand text-bold block">Odhlásit se</button>
+        <button @click="signOut" class="mt-10 text-note text-bold block">Odhlásit se</button>
     </div>
 </template>
 
